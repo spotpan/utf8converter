@@ -1,0 +1,3 @@
+/home/user/utfapp/build/CMakeFiles/edit_cache.dir
+/home/user/utfapp/build/CMakeFiles/rebuild_cache.dir
+/home/user/utfapp/build/CMakeFiles/utfapp.dir
