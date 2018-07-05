@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++0x -g   CMakeFiles/utfapp.dir/main.cpp.o  -o utfapp 

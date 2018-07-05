@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/yu/Desktop/utfapp/checked.h
+core.h
+/home/yu/Desktop/utfapp/core.h
+stdexcept
+-
+
+/home/yu/Desktop/utfapp/core.h
+iterator
+-
+
+/home/yu/Desktop/utfapp/main.cpp
+core.h
+/home/yu/Desktop/utfapp/core.h
+checked.h
+/home/yu/Desktop/utfapp/checked.h
+unchecked.h
+/home/yu/Desktop/utfapp/unchecked.h
+iostream
+-
+fstream
+-
+string
+-
+vector
+-
+
+/home/yu/Desktop/utfapp/unchecked.h
+core.h
+/home/yu/Desktop/utfapp/core.h
+

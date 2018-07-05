@@ -322,6 +322,4 @@ namespace utf8
 
 } // namespace utf8
 
-#endif //header guard
-
-
+#endif //header 

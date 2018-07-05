@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/utfapp.dir/main.cpp.o  -o utfapp 
