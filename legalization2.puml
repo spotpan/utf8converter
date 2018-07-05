@@ -1,0 +1,77 @@
+@startuml
+start
+floating note right
+  ""template<typename octect_iterator""
+  "",typename u32bit_iterator>""
+  ==================================
+  <b>function name: utf16to8</b>
+  ==================================
+  //parameters(u32bit_iterator start, u32bit_iterator//
+  //end, octet_iterator result)//
+
+end note
+while (start < end)
+  :uint32_t cp = mask(*start++);
+  if (is_lead_surrogate(cp)?) then (yes)
+
+    if(start != end) then (yes)
+        :uint32_t trail_surrogate
+         = mask16(*start++);
+        if(is_trail_surrogate(trail_surrogate)) then(yes)
+        :cp = (cp << 10) +
+        trail_surrogate +
+        SURROGATE_OFFSET;
+        else(no)
+        :throw invalid_utf16
+        (static_cast<uint16_t>(
+        trail_surrogate));
+        stop
+        endif
+    else(no)
+    : throw invalid_utf16
+    (static_cast
+    <uint16_t>(cp));
+    stop
+    endif
+
+  elseif (is_trail_surrogate(cp)?) then(yes)
+    :throw invalid_utf16(static_cast<uint16_t>(cp));
+    stop
+  else (no)
+  :result = append(cp, result);
+  endif
+endwhile
+:return result;
+
+stop
+
+start
+floating note right
+  ""template<typename octect_iterator""
+  "",typename u32bit_iterator>""
+  ==================================
+  <b>function name: utf8to16</b>
+  ==================================
+  //parameters(u32bit_iterator start, u32bit_iterator//
+  //end, octet_iterator result)//
+end note
+
+while (start < end)
+  :uint32_t cp = next(start, end);
+  if (cp > 0xffff)
+  : *result++ = static_cast
+  <uint16_t>((cp >> 10)
+  + internal::LEAD_OFFSET);
+  : *result++ = static_cast
+  <uint16_t>((cp & 0x3ff)
+  + internal::
+  TRAIL_SURROGATE_MIN);
+  else
+  : *result++ = static_cast
+  <uint16_t>(cp);
+  endif
+endwhile
+:return result;
+
+stop
+@enduml
