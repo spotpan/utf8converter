@@ -1,0 +1,59 @@
+@startuml
+class exception{
+}
+
+class invalid_code_point {
+    +invalid_code_point(uint32_t codepoint)
+    +what() : char*
+    +code_point() : uint32_t {query}
+    -cp:uint32_t
+}
+
+class invalid_utf16{
+    +invalid_utf16(uint16_t u)
+    +what() : char*
+    -u16: uint16_t
+    +utf16_word() : uint16_t {query}
+}
+
+class invalid_utf8 {
+    +invalid_utf8(uint8_t u)
+    +what() : char*
+    -u8: uint8_t
+    +utf8_octet() : uint8_t {query}
+}
+
+class iterator <template <typename octet_iterator>>{
+    +iterator()
+    +iterator(const octet_iterator& octet_it, const octet_iterator& rangestart, const octet_iterator& rangeend)
+    +operator!=(const iterator& rhs) : bool {query}
+    +operator==(cosnt iterator& rhs) : bool {query}
+    +operator++(int) : iterator
+    +operator++() : iterator&
+    +base() : :octet_iterator {query}
+    -it : octet_iterator
+    -range_end : octet_iterator
+    -range_start : octet_iterator
+    +operator*() : uint32_t {query}
+}
+class not_enough_room{
+    +what() : char*
+}
+
+enum utf_error {
+    INCOMPLETE_SEQUENCE
+    INVALID_CODE_POINT
+    INVALID_LEAD
+    NOT_ENOUGH_ROOM
+    OVERLONG_SEQUENCE
+    UTF8_OK
+}
+
+exception <|-- invalid_code_point
+exception <|-- invalid_utf16
+exception <|-- invalid_utf8
+exception <|-- not_enough_room
+
+
+
+@enduml
