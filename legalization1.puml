@@ -1,0 +1,165 @@
+@startuml
+start
+floating note right
+  ""template<typename octect_iterator""
+  "",typename u32bit_iterator>""
+  ==================================
+  <b>function name: utf32to8</b>
+  ==================================
+  //parameters(u32bit_iterator start, u32bit_iterator//
+  //end, octet_iterator result)//
+
+end note
+while (start != end)
+  :result = append(*(start++), result);
+endwhile
+:return result;
+
+stop
+
+start
+floating note left
+  ""template<typename octect_iterator>""
+  ==================================
+  <b>function name: append</b>
+  ==================================
+  //parameters(uint32_t cp, octet_iterator result)//
+end note
+if(! is_code_point_valid(cp))
+:throw invalid_code_point(cp);
+stop
+endif
+
+if(cp<0x08)
+:*(result++) = static_cast<uint8_t>(cp);
+ else if (cp < 0x800)
+  :*(result++) = static_cast
+  <uint8_t>((cp >> 6) | 0xc0);
+  :*(result++) = static_cast
+  <uint8_t>((cp & 0x3f) | 0x80);
+ else if (cp < 0x10000)
+ :*(result++) = static_cast
+ <uint8_t>((cp >> 12)| 0xe0);
+ :*(result++) = static_cast
+ <uint8_t>(((cp >> 6) & 0x3f)| 0x80);
+ :*(result++) = static_cast
+ <uint8_t>((cp & 0x3f)| 0x80);
+ else
+ :*(result++) = static_cast
+ <uint8_t>((cp >> 18)| 0xf0);
+ : *(result++) = static_cast
+ <uint8_t>(((cp >> 12) & 0x3f)| 0x80);
+ : *(result++) = static_cast
+ <uint8_t>(((cp >> 6) & 0x3f)| 0x80);
+ :*(result++) = static_cast
+ <uint8_t>((cp & 0x3f)| 0x80);
+endif
+
+:return result;
+
+stop
+
+
+start
+floating note right
+  ""template<typename octect_iterator""
+  "",typename u32bit_iterator>""
+  ==================================
+  <b>function name: utf8to32</b>
+  ==================================
+  //parameters(u32bit_iterator start, u32bit_iterator//
+  //end, octet_iterator result)//
+
+end note
+while (start < end)
+  :result = next(start, end);
+endwhile
+:return result;
+
+stop
+
+start
+floating note left
+  ""template<typename octect_iterator>""
+  ==================================
+  <b>function name: next</b>
+  ==================================
+  //parameters(octet_iterator& it, octet_iterator end)//
+end note
+:uint32_t cp = 0;
+:utf_error err_code = <b>validate_next</b>(it, end, cp);
+:switch(err_code);
+if (UTF8_OK) then (yes)
+  :break;
+elseif (NOT_ENOUGH_ROOM) then (yes)
+  :throw not_enough_room();
+  stop
+elseif (INVALID_LEAD | INCOMPLETE_SEQUENCE | OVERLONG_SEQUENCE) then (yes)
+  :throw invalid_utf8(*it);
+  stop
+else (INVALID_CODE_POINT)
+  :throw invalid_code_point(cp);
+  stop
+endif
+
+:return cp;
+
+stop
+
+start
+floating note left
+  ""template<typename octect_iterator>""
+  ==================================
+  <b>function name: validate_next</b>
+  ==================================
+  //parameters(octet_iterator& it, octet_iterator end,//
+  //uint32_t& code_point)//
+end note
+:utf_error err = UTF8_OK;
+if (it == end)
+:return NOT_ENOUGH_ROOM;
+stop
+endif
+:octet_iterator original_it = it;
+:uint32_t cp = 0;
+:typedef typename std::iterator_traits<octet_iterator>::
+difference_type octet_difference_type;
+:const octet_difference_type length = sequence_length(it);
+:utf_error err = UTF8_OK;
+:switch (length);
+if(case 0:)
+:return INVALID_LEAD;
+stop
+elseif(case 1:)
+: err = get_sequence_1(it, end, cp);
+elseif(case 2:)
+: err = get_sequence_2(it, end, cp);
+elseif(case 3:)
+: err = get_sequence_3(it, end, cp);
+else(case 4:)
+: err = get_sequence_4(it, end, cp);
+endif
+
+if(err == UTF8_OK)
+    if(is_code_point_valid(cp))
+        if(!is_overlong_sequence(cp, length))
+        :code_point = cp;
+        :++it;
+        :return UTF8_OK;
+        stop
+        else
+        :err = OVERLONG_SEQUENCE;
+        endif
+    else
+    : err = INVALID_CODE_POINT;
+    endif
+else
+stop
+endif
+
+:it = original_it;
+:return err;
+
+stop
+
+@enduml
