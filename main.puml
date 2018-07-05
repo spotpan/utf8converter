@@ -1,0 +1,47 @@
+@startuml
+start
+
+If (not opened file) then
+:Could not open;
+stop
+else
+:openfile1 ofstream
+openfile2 U16ofstream
+openfile3 U32ofstream
+openfile4 ofstream
+openfile5 ofstream
+openfile6 ofstream;
+
+endif
+
+while(getline)
+    if(Bom has not been checked = 1)
+    :print UTF8 test;
+    else
+    :Bom has not been checked = 0;
+    endif
+: convert to UTF16
+ add /0
+ write to file2
+ write DBCS to file5;
+: convert to UTF32
+ add /0
+ write to file3
+ write DBCS to file6;
+: convert back to UTF8
+ add /0
+ write to file1
+ write MBCS to file4;
+
+:line++;
+endwhile
+
+:closefile1
+closefile2
+closefile3
+closefile4
+closefile5
+closefile6;
+
+stop
+@enduml
