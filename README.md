@@ -2,5 +2,5 @@
 
 * utf8/16/32 converter
 * MBCS supported
-* MAC + gcc/WINDOWS + minGW/LINUX + gcc
+* MAC + g++/WINDOWS + minGW + g++/LINUX + g++
 * BOM supported
