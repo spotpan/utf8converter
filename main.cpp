@@ -31,7 +31,7 @@ int main()
     file5.open("to16mbc.txt");
     file6.open("to32mbc.txt");
 
-    unsigned char byte_order_mark[] = {0xef, 0xbb, 0xbf};
+
     //const uint32_t bom32le[] = {0xff,0xfe,0x00,0x00};
     unsigned int line_count = 1;
     int bom_set = 1;
@@ -44,7 +44,7 @@ int main()
 
         if(bom_set)
         {
-            bool bbom = utf8::starts_with_bom(byte_order_mark, byte_order_mark + sizeof(byte_order_mark));
+            bool bbom = utf8::starts_with_bom(line.begin(), line.end());
             if(bbom)
             {
                 printf("utf-8-bom\n");bom_set=0;
