@@ -2,7 +2,7 @@
 
 * utf8/16/32 converter
 * MBCS supported
-* MAC + gcc/WINDOWS + minGW/LINUX + gcc
+* MAC + g++/WINDOWS + minGW/LINUX + g++
 * BOM supported
 
 ![main](https://github.com/spotpan/utf8converter/blob/master/pictures/main.png)
